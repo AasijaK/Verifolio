@@ -1,0 +1,803 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In | VeriFolio</title>
+
+    <style>
+        /* =========================
+           GLOBAL STYLES
+        ========================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #10172a;
+            --purple: #6254f5;
+            --dark-purple: #282657;
+            --text: #10172a;
+            --muted: #657795;
+            --border: #e1e8f0;
+            --input-bg: #f7f9fc;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            color: var(--text);
+            background: #ffffff;
+        }
+
+        a {
+            color: var(--purple);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* =========================
+           MAIN TWO-COLUMN LAYOUT
+        ========================= */
+        .page-container {
+            display: grid;
+            grid-template-columns: 52% 48%;
+            min-height: 100vh;
+        }
+
+        /* =========================
+           LEFT BRANDING PANEL
+        ========================= */
+        .brand-panel {
+            position: relative;
+            min-height: 100vh;
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            color: white;
+
+            background:
+                radial-gradient(
+                    circle at 80% 75%,
+                    rgba(98, 84, 245, 0.17),
+                    transparent 38%
+                ),
+                linear-gradient(
+                    135deg,
+                    #11172c 0%,
+                    #211f50 60%,
+                    #29285d 100%
+                );
+        }
+
+        .brand-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.13;
+
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 3px,
+                rgba(255, 255, 255, 0.12) 4px
+            );
+        }
+
+        .brand-logo,
+        .brand-content,
+        .brand-footer {
+            position: relative;
+            z-index: 1;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
+        }
+
+        .brand-content {
+            max-width: 460px;
+            margin: auto 0;
+            padding: 50px 0;
+        }
+
+        .brand-content h1 {
+            font-size: clamp(34px, 3.2vw, 49px);
+            line-height: 1.2;
+            margin-bottom: 22px;
+            letter-spacing: -1.2px;
+        }
+
+        .brand-content h1 span {
+            color: #a69fff;
+        }
+
+        .brand-content p {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #c5c8df;
+            max-width: 410px;
+        }
+
+        .brand-features {
+            display: grid;
+            gap: 17px;
+            margin-top: 36px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #e2e3f5;
+            font-size: 14px;
+        }
+
+        .feature-icon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            background: rgba(130, 118, 255, 0.2);
+            color: #b9b1ff;
+        }
+
+        .brand-footer {
+            color: #b4b7d2;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* =========================
+           RIGHT LOGIN PANEL
+        ========================= */
+        .login-panel {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 45px 55px;
+            background: #ffffff;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 430px;
+        }
+
+        .mobile-logo {
+            display: none;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 34px;
+        }
+
+        .login-header h2 {
+            font-size: 32px;
+            font-weight: 750;
+            letter-spacing: -0.8px;
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            font-size: 15px;
+            line-height: 1.6;
+            color: var(--muted);
+        }
+
+        .welcome-label {
+            display: inline-block;
+            margin-bottom: 13px;
+            padding: 7px 13px;
+            border-radius: 20px;
+            background: #f0efff;
+            color: var(--purple);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* =========================
+           FORM FIELDS
+        ========================= */
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #7c8fae;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            height: 51px;
+            padding: 0 15px;
+            border: 1px solid var(--border);
+            border-radius: 0;
+            outline: none;
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 14px;
+            transition: 0.2s ease;
+        }
+
+        .input-wrapper input:focus {
+            border-color: var(--purple);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(98, 84, 245, 0.09);
+        }
+
+        .input-wrapper input::placeholder {
+            color: #9aa6b8;
+        }
+
+        .password-input {
+            padding-right: 48px !important;
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 14px;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* =========================
+           REMEMBER / FORGOT
+        ========================= */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin: 2px 0 27px;
+            font-size: 12px;
+        }
+
+        .remember-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            cursor: pointer;
+        }
+
+        .remember-option input {
+            width: 15px;
+            height: 15px;
+            accent-color: var(--purple);
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* =========================
+           SIGN IN BUTTON
+        ========================= */
+        .signin-button {
+           width: 100%;
+            height: 52px;
+            border-radius: var(--radius-pill);
+            background: var(--navy);
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 200ms var(--ease-out);
+            border: none;
+            margin-top: 16px;
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .signin-button:hover {
+          transform: translateY(-2px);
+            box-shadow: 0 18px 32px rgba(15, 23, 42, 0.3);
+        }
+
+        .signin-button:active {
+             transform: scale(0.97);
+        }
+
+        .signin-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -100%;
+            width: 100%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: 0.6s;
+        }
+
+        .signin-button::after {
+            left: 150%;
+        }
+
+        .message {
+            display: none;
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .message.error {
+            display: block;
+            background: #fff0f0;
+            color: #b42318;
+        }
+
+        /* =========================
+           SOCIAL LOGIN DIVIDER
+        ========================= */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 17px;
+            margin: 30px 0 25px;
+            color: #657795;
+            font-size: 10px;
+            letter-spacing: 1.3px;
+            white-space: nowrap;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .social-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 13px;
+        }
+
+        .social-button {
+            height: 49px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--border);
+            background: #ffffff;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .social-button:hover {
+            border-color: var(--purple);
+            background: #f9f8ff;
+        }
+
+        .google-icon {
+            color: #4285f4;
+            font-size: 19px;
+            font-weight: bold;
+        }
+
+        .github-icon {
+            font-size: 19px;
+        }
+
+        /* =========================
+           SIGNUP LINK
+        ========================= */
+        .signup-text {
+            margin-top: 32px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .signup-text a {
+            font-weight: 700;
+        }
+
+        /* =========================
+           RESPONSIVE DESIGN
+        ========================= */
+        @media (max-width: 1000px) {
+            .page-container {
+                grid-template-columns: 42% 58%;
+            }
+
+            .brand-panel {
+                padding: 40px 30px;
+            }
+
+            .login-panel {
+                padding: 40px 30px;
+            }
+
+            .brand-content h1 {
+                font-size: 34px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .page-container {
+                display: block;
+            }
+
+            .brand-panel {
+                display: none;
+            }
+
+            .login-panel {
+                min-height: 100vh;
+                padding: 35px 22px;
+                align-items: flex-start;
+            }
+
+            .login-container {
+                max-width: 440px;
+                margin: auto;
+            }
+
+            .mobile-logo {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                margin-bottom: 36px;
+                color: var(--navy);
+                font-size: 23px;
+                font-weight: 700;
+            }
+
+            .mobile-logo .logo-icon {
+                color: #ffffff;
+            }
+
+            .login-header h2 {
+                font-size: 29px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .login-panel {
+                padding: 28px 16px;
+            }
+
+            .form-options {
+                font-size: 11px;
+            }
+
+            .social-buttons {
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="page-container">
+
+        <!-- LEFT BRANDING SECTION -->
+        <section class="brand-panel">
+
+            <div class="brand-logo">
+                <div class="logo-icon" aria-hidden="true">⬟</div>
+                <span>VeriFolio</span>
+            </div>
+
+            <div class="brand-content">
+                <h1>
+                    Welcome back to
+                    <span>your future.</span>
+                </h1>
+
+                <p>
+                    Sign in to access your verified portfolio,
+                    showcase your skills, and connect with
+                    recruiters who value proven expertise.
+                </p>
+
+                <div class="brand-features">
+
+                    <div class="feature">
+                        <span class="feature-icon">✓</span>
+                        <span>Your verified skills, all in one place</span>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon">✦</span>
+                        <span>Build your professional identity</span>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon">↗</span>
+                        <span>Connect with career opportunities</span>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="brand-footer">
+                © <span id="year">2026</span> VERIFOLIO SYSTEM
+            </div>
+
+        </section>
+
+
+        <!-- RIGHT LOGIN FORM SECTION -->
+        <section class="login-panel">
+
+            <div class="login-container">
+
+                <!-- Logo shown only on mobile -->
+                <div class="mobile-logo">
+                    <div class="logo-icon" aria-hidden="true">⬟</div>
+                    <span>VeriFolio</span>
+                </div>
+
+                <header class="login-header">
+                    <span class="welcome-label">WELCOME BACK</span>
+
+                    <h2>Sign In</h2>
+
+                    <p>
+                        Continue your journey to a verified
+                        professional identity.
+                    </p>
+                </header>
+
+
+                <!-- LOGIN FORM -->
+                <form id="loginForm">
+
+                    <div class="form-group">
+                        <label for="email">College Email / Email</label>
+
+                        <div class="input-wrapper">
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="Enter your email address"
+                                autocomplete="username"
+                                required
+                            >
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+
+                        <div class="input-wrapper">
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="password-input"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="toggle-password"
+                                id="togglePassword"
+                                aria-label="Show password"
+                                aria-pressed="false"
+                            >◎</button>
+                        </div>
+                    </div>
+
+
+                    <div class="form-options">
+
+                        <label class="remember-option">
+                            <input
+                                type="checkbox"
+                                id="rememberMe"
+                                name="rememberMe"
+                            >
+                            <span>Remember me</span>
+                        </label>
+
+                        <a href="/forgot-password" class="forgot-link">
+                            Forgot Password?
+                        </a>
+
+                    </div>
+
+
+                    <button type="submit" class="signin-button">
+                        Sign In
+                    </button>
+
+                    <div
+                        id="formMessage"
+                        class="message"
+                        role="status"
+                        aria-live="polite"
+                    ></div>
+
+                </form>
+
+
+                <!-- SOCIAL LOGIN -->
+                <div class="divider">
+                    OR SIGN IN WITH
+                </div>
+
+                <div class="social-buttons">
+
+                    <button
+                        type="button"
+                        class="social-button"
+                        id="googleLogin"
+                    >
+                        <span class="google-icon">G</span>
+                        Google
+                    </button>
+
+                    <button
+                        type="button"
+                        class="social-button"
+                        id="githubLogin"
+                    >
+                        <span class="github-icon">●</span>
+                        GitHub
+                    </button>
+
+                </div>
+
+
+                <!-- SIGNUP LINK -->
+                <p class="signup-text">
+                    Don't have an account?
+                    <a href="signup.html">Create Account</a>
+                </p>
+
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+    <script>
+        // Automatically update the copyright year
+        document.getElementById("year").textContent =
+            new Date().getFullYear();
+
+
+        // Show / hide password
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+
+        togglePassword.addEventListener("click", function () {
+            const isHidden = passwordInput.type === "password";
+
+            passwordInput.type = isHidden ? "text" : "password";
+
+            togglePassword.setAttribute(
+                "aria-label",
+                isHidden ? "Hide password" : "Show password"
+            );
+
+            togglePassword.setAttribute(
+                "aria-pressed",
+                String(isHidden)
+            );
+
+            togglePassword.textContent = isHidden ? "◉" : "◎";
+        });
+
+
+        // Login form handling
+        const loginForm = document.getElementById("loginForm");
+        const formMessage = document.getElementById("formMessage");
+
+        loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            formMessage.className = "message";
+            formMessage.textContent = "";
+
+            const email = document.getElementById("email").value.trim();
+            const password = passwordInput.value;
+
+            if (!email || !password) {
+                formMessage.textContent =
+                    "Please enter your email and password.";
+
+                formMessage.className = "message error";
+                return;
+            }
+
+            /*
+              FRONTEND DEMO:
+              Connect this form to your backend authentication API.
+              Do not store passwords in localStorage or in frontend code.
+            */
+
+            window.location.href = "dashboard.html";
+
+        });
+
+
+        // Social login placeholders
+        document.getElementById("googleLogin").addEventListener(
+            "click",
+            function () {
+                alert("Connect Google OAuth to enable Google sign-in.");
+            }
+        );
+
+        document.getElementById("githubLogin").addEventListener(
+            "click",
+            function () {
+                alert("Connect GitHub OAuth to enable GitHub sign-in.");
+            }
+        );
+    </script>
+
+</body>
+</html>
